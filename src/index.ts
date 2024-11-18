@@ -1,15 +1,16 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import dotenv from "dotenv";
-import { BookType } from "./types";
 
 dotenv.config();
 
 const PORT = parseInt(process.env.PORT);
+const API_URL = process.env.API_URL;
 
 const typeDefs = `#graphql
 
     type Book {
+        id: Int
         title: String
         synopsis: String
         author: String
@@ -22,25 +23,13 @@ const typeDefs = `#graphql
 
 `;
 
-const books: BookType[] = [
-    {
-        "title": "To Kill a Mockingbird",
-        "synopsis": "A young girl coming of age in the Deep South during the 1930s, witnessing the injustice of racism and prejudice.",
-        "author": "Harper Lee",
-        "year": 1960
-    },
-    {
-        "title": "1984",
-        "synopsis": "A dystopian novel set in a totalitarian society controlled by Big Brother, exploring themes of surveillance, censorship, and individuality.",
-        "author": "George Orwell",
-        "year": 1949
-    }
-];
-
-
 const resolvers = {
     Query: {
-        getAllBooks: () => books,
+        getAllBooks: async() => {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            return data;
+        },
     }
 }
 
