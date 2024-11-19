@@ -57,6 +57,17 @@ const resolvers = {
                         author: author,
                     })
                 });   
+
+                if(!response.ok){
+                    const errorData = await response.json();
+                    throw new GraphQLError('The GraphQL operation includes an invalid value for a field argument.', {
+                        extensions: {
+                            code: 'BAD_USER_INPUT',
+                            errorData: errorData,
+                        },
+                    });
+                };
+
                 const data = await response.json();
                 return data;
             }catch(err){
@@ -82,10 +93,11 @@ const resolvers = {
                 });
 
                 if(!response.ok){
-                    // const errorData = await response.json();
+                    const errorData = await response.json();
                     throw new GraphQLError("The GraphQL operation is not valid against the server's schema.", {
                         extensions: {
                             code: 'GRAPHQL_VALIDATION_FAILED',
+                            errorData: errorData,
                         },
                     });
                 };
