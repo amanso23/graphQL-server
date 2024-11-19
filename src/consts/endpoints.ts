@@ -1,3 +1,4 @@
 export const enum EndPoints {
-    getBooks = "api/books",
+    books = "api/books",
+    search = "api/search",
 }
